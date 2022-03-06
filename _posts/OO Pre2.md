@@ -1,0 +1,628 @@
+# OO Pre2
+
+* 面向对象设计与构造寒假预习
+
+
+
+## task1
+
+### 构造函数
+
+```java
+// in Bottle.java
+public Bottle(int id, String name, long price, double capacity, boolean filled) {
+	this.id = id;
+	this.name = name;
+	this.price = price;
+	this.capacity = capacity;
+	this.filled = filled;
+}
+
+// in Main.java
+Bottle bottle = new Bottle(id, name, price, capacity, true);
+```
+
+* JAVA 中的一种特殊函数，与函数名相同，无返回值
+  * 作用：一般用来初始化成员属性和成员方法的，即new对象产生后，就调用了对象的属性和方法。
+  * 特点：
+    * **函数名与类名相同**
+    * 不用定义返回值类型。（不同于void类型返回值，void是没有具体返回值类型；构造函数是连类型都没有）
+    * 不可以写return语句。（返回值类型都没有，故不需要return语句）
+
+
+
+### toString()
+
+> 建议在 `Bottle` 类中定义 `toString` 方法，返回描述字符串，在主类的 `main` 方法中调用 `Bottle` 对象的 `toString` 方法来打印
+
+```java
+// in Bottle.java
+public String toString() {
+    return 	"The bottle's id is " + id +
+		 	", name is " + name +
+			", capacity is " + capacity +
+			", filled is " + filled + ".";
+}
+
+// in Main.java
+System.out.println(bottle.toString());
+```
+
+
+
+### args/argv
+
+> 入口方法最好是 `public static void main(String[] args)`
+
+**否则会报错**
+
+
+
+### I/O 
+
+* 读入需要使用 `Scanner` 类
+
+  * ```java
+    import java.util.Scanner
+    
+    // input
+    Scanner sc = new Scanner(System.in);
+    
+    int id = sc.nextInt();
+    String name = sc.next();
+    long price = sc.nextLong();
+    double capacity = sc.nextDouble();
+    ```
+
+* `println` 和 `print` 的区别为前者自动换行
+* `next/nextLine`
+  * `nextLine()`  方法返回的是 `Enter` 键之前的所有字符，**可以得到带空格的字符串**。
+  * `next()  ` 会自动消去有效字符前的空格，只返回输入的字符，**不能**得到带空格的字符串。
+  * 类似于 C 中的 `gets` 和 `scanf("%s", ...)`？
+
+
+
+### Generate
+
+（此处主要针对 `Getter and Setter`）
+
+方法一：
+
+* 鼠标右击 -> `Generate`
+* 点击 `Getter and Setter`
+* 将定义的字段全部选中，点击 `OK`
+
+方法二：
+
+​	使用`Alt + insert`快捷键，选择 `Getter and setter`，将定义的字段全部选中,点击OK
+
+> 有个小坑，就是你在利用 `Alt + insert` 快捷键的时候，一定要注意你的光标在哪里，切记，要把光标放在类中，否则只会出现 `Generator->Copyright`，一定放在类中。
+
+
+
+## task2
+
+### 容器
+
+#### ArrayList
+
+* 类似于 Cpp 中的 `vector`
+  *  [Java ArrayList - 菜鸟教程](https://www.runoob.com/java/java-arraylist.html)
+* 除了 `ArrayList` 外，还有 `HashMap`、`TreeMap`、`HashSet`、`TreeSet `等常用容器。
+
+```java
+public class MainClass {
+    public static void main(String[] args) {
+		// 1. 创建容器。大部分容器都会随着元素的加入自动扩容。
+        ArrayList<Bottle> bottles = new ArrayList<>();
+
+        // 2. 加入一个元素
+        Bottle bottle = new Bottle();
+        bottles.add(bottle);
+
+        // 3. 判断元素是否在容器内
+        if (bottles.contains(bottle)) {
+            System.out.println("We have such a bottle!");
+        }
+
+        // 4. 遍历容器中的所有元素
+        for (Bottle item : bottles) {
+            System.out.println(item.getName());
+        }
+
+        // 5. 输出容器规模
+        System.out.println(bottles.size());
+
+        // 6. 删除一个元素
+        bottles.remove(bottle);
+    }
+}
+```
+
+
+
+#### HashMap
+
+当 `Id` 非按顺序输入，利用 `ArrayList` 建立其与成员的对应关系不方便；此处利用 `HashMap`（类似于 Cpp 的 `map`）
+
+```java
+HashMap<Integer, Adventurer> adventurers = new HashMap<>();
+// HashMap 建立的是对象之间的映射，因此不能直接使用基本数据类型 int
+
+// 利用Key查找成员，xxx.get(key)
+adventurers.get(advId)
+    
+// 利用KeySet遍历
+Set<Integer> keys = bottles.keySet();
+for (int key: keys) {
+    maxPrice = Math.max(maxPrice, bottles.get(key).getPrice());
+}
+```
+
+
+
+### BigInteger
+
+* 四种常用的表示整数的数据类型：`byte`, `short`, `int`, `long`，分别占 1,2,4,8 个字节；表示最大的整数范围为 $2^{64}$
+* 表示更大的数字需要使用 `BigInteger` 类
+
+常用构造器：
+
+```java
+public BigInteger(String val, int radix); 
+// radix 缺省则默认十进制，注意 val 传入的是字符串，例：
+BigInteger sum = new BigInteger("0");
+```
+
+常用静态方法
+
+```java
+public static BigInteger valueOf(long val);
+// 该方法是将一个long类型的数字转换为BigInteger对象
+```
+
+运算
+
+```java
+// 1. 算术运算
+public BigInteger add(BigInteger val);
+// 返回和另一个BigInteger对象相加的和
+public BigInteger subtract(BigInteger val);
+// 返回和另一个BigInteger对象相减的差
+public BigInteger multiply(BigInteger val);
+// 返回和另一个BigInteger对象相乘的积
+...
+    
+// 2. 位运算
+public BigInteger and(BigInteger val);
+// 和另一个对象进行且运算
+...
+```
+
+其他详细用法：[(51条消息) BigInteger使用简介_YP_W_Ricardo的博客-CSDN博客_biginteger占多少字节](https://blog.csdn.net/YP_W_Ricardo/article/details/105909659?ops_request_misc=%7B%22request%5Fid%22%3A%22164494252116780269853225%22%2C%22scm%22%3A%2220140713.130102334..%22%7D&request_id=164494252116780269853225&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-2-105909659.pc_search_insert_es_download&utm_term=BigInteger&spm=1018.2226.3001.4187)
+
+
+
+## task 3
+
+### 继承
+
+* 定义子类继承父类的特征和行为，使得子类可以拥有父类的属性和方法
+  * 作用：代码复用
+
+举例：
+
+```java
+public class Hero {
+    int healthPoint;
+    int defensePoint;
+    int magicalPoint;
+
+    public void attackWithHand() {
+        /**/
+    }
+}
+```
+
+另一个类 `Knight` ，新增手枪攻击方法，从头写：
+
+```java
+public class Knight {
+    int healthPoint;
+    int defensePoint;
+    int magicalPoint;
+
+    public void attackWithHand() {
+        /**/
+    }
+
+    public void attackWithPistol() {
+        /**/
+    }
+}
+```
+
+使用继承，我们可以让类 `A` 去得到类 `B` 已有的属性和方法，接下来类 `A` 就只需要专注于编写其特有部分的代码了
+
+```java
+public class Knight extends Hero {
+    // 公共的属性和方法不需要重复编写
+
+    // 只需要编写Knight特有的手枪攻击方法
+    public void attackWithPistol() {
+        /**/
+    }
+}
+```
+
+`A extends B` 意味着 `A` 继承了 `B`，说明前者是后者的子类，得到了其属性和方法。
+
+
+
+### 向上转型
+
+两个概念
+
+* 对象：一个类的实例化结果，对应内存中的一个数据结构
+* 对象引用：使用一个变量来指向内存中的这个数据结构（即对象）
+  * 本质上是 C 中的指针
+
+
+
+两个类型
+
+* 对象（创建）类型：任何一个对象一旦创建，其对应的创建类型（即创建时调用的构造方法名对应的类）就一直保持不变
+  * 其实 Java 提供了获取该类型的手段，同学们不妨自行搜索一下
+
+* 对象引用类型：引用一个对象的变量的声明类型。
+
+
+
+解释
+
+* 使用上面的 Knight 类来构造一个对象：`new Knight()`，这条语句返回一个**创建的对象**
+
+* 我们同时需要声明一个**对象引用**来指向返回的对象，否则可能就找不到这个对象了
+
+* 所以，一般代码都会这么写：`Knight knt = new Knight()` 。
+
+
+
+向上转型：
+
+```java
+Hero h = new Knight();
+// eg.
+public class Main {
+    public static void main(String[] args) {
+        Hero hero1 = new Knight();
+        hero1.attackWithHand();
+    }
+}
+// But...
+public class Main {
+    public static void main(String[] args) {
+        Hero hero1 = new Knight();
+        // 编译错误
+        hero1.attackWithPistol();
+    }
+}
+```
+
+* 第二段代码会出现编译错误，编译器认为 `Hero` 类中没有定义 `attackWithPistol()` 方法。
+* 这就带来了一个问题，明明所指向的对象拥有相应的方法，但是却不能调用。
+  * 其原因是我们进行了向上转型，使用 Hero 类型的变量来引用它，这往往表明程序设计者此时只关心在 Hero 类这个层次能够看到的方法（否则就应该使用 Knight 来声明一个引用）
+
+
+
+### 向下转型
+
+在下面的例子中，我们让 `A` 是 `B` 和 `C` 的父类，`A` 拥有方法 `a()` ，`B` 和 `C` 拥有各自的方法 `b()` 和 `c()` ，然后执行下面的操作：
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // 开一个数组，这个数组里的所有引用是A类型的
+        A[] list = new A[20];
+        Scanner input = new Scanner(System.in);
+        int cnt = 0;
+        // 先构造10个对象，放到数组list中
+        for (int i = 0; i < 10; i++) {
+            int t = input.nextInt();
+            if (t % 3 == 0) {
+                list[cnt] = new A();
+            } else if (t % 3 == 1) {
+                list[cnt] = new B();
+            } else {
+                list[cnt] = new C();
+            }
+            cnt++;
+        }
+        // 我们想调用list中所有C类型对象的c()方法
+        for (int i = 0; i < cnt; i++) {
+            // c方法存在吗？
+            list[i].c();
+        }
+    }
+}
+// Class A/B/C...
+```
+
+**错误：父类型引用直接调用子类型对象特有的方法**
+
+现在存在一个有效的对象引用（即指向一个实际存在的对象），同时已知指向的对象的创建类型是对象引用类型的子类，而且此时想要调用子类特有的方法（即父类中不存在的方法）
+
+* `instanceof` ：用来判断一个对象引用所指向的对象的创建类型是否为特定的某个类，
+  * 一般写为 `obj instanceof A`，其中 obj 为一个对象引用，A 为一个类型（类或接口），这个表达式的取值结果为布尔型
+  * 在这个表达式取值为 true 的情况下，可以使用**向下转型** (down cast) 来使用一个 A 类型的对象来引用obj： `A ao = (A)obj` 。
+  * 注意，实际上 obj 所指向**对象的创建类型**永远不会发生变化，转型的只是对象引用类型。下面例子给出了相应的向下转型场景：
+
+```java
+// 我们想调用list中所有C类型对象的c()方法
+for (int i = 0; i < cnt; i++) {
+   	// 先判断是不是C类型的对象，A instanceof B会返回true 或者 false
+   	if (list[i] instanceof C) {
+      	// 如果是，就向下转型，使用这个对象原本的类型的引用去指向它
+        // 如果不是却还强行向下转型，则会出现错误
+      	C ref = (C) list[i];
+      	// 然后调用其c()方法
+      	ref.c();
+	}
+}
+```
+
+工厂模式：在继承和接口实现中常用的设计模式 [链接](https://www.runoob.com/design-pattern/factory-pattern.html)
+
+
+
+## task 4
+
+* 学习方法的重写、Java 的多态机制以及 Java 的异常处理机制，学会使用 Java 类库提供的类进行排序
+
+### 对象方法的重写和复用
+
+* 让子类与父类在相应方法的调用上保持了一致性
+* 在程序编写方面，一般会标上一个 `@Override` 标签，便于开发人员了解一个方法是否为重写方法
+
+```java
+class Course {
+    void displayInfo() {
+        System.out.println("老师上课，同学完成作业，最终老师会给一个成绩");
+    }
+}
+
+class OOCourse extends Course {
+    @Override
+    void displayInfo() {
+        System.out.println("老师上课，同学完成作业，最终老师会给一个成绩");
+        System.out.println("还有研讨课，强测互测等任务，学期结束还会有颁奖典礼");
+    }
+}
+```
+
+#### super
+
+* `super` 实际指代的是当前对象从父类继承得到的内容，因此通过 `super.displayInfo()` 可以确保调用的是 `Course` 实现的 `displayInfo` 方法
+  * 便于维护代码
+
+```java
+class OOCourseAlpha extends Course {
+    @Override
+    void displayInfo() {
+        super.displayInfo(); // 调用了类Course中定义的方法
+        System.out.println("还有研讨课，强测互测等任务，学期结束还会有颁奖典礼");
+    }
+}
+```
+
+​	如果你还需要编写其他的课程类，比如 COCourse 和 OSCourse，那么通过继承共用Course 类的代码就可以省下一些力气。
+
+​	如果你只单单只想写一个 OOCourse 类，那么或许可能只写一个反而是更好的。
+
+
+
+### 多态
+
+前面提到，如何判断实际调用的是子类重写的方法，还是父类实现的方法。其实，这与对象**引用的类型**无关，而是取决于被引用对象的**创建类型**。请看下面的代码示例：
+
+```java
+Course c1 = new Course();
+Course c2 = new OOCourseAlpha();
+c1.displayInfo();
+c2.displayInfo();
+```
+
+其中通过c1调用的实际是Course类实现的displayInfo方法，而通过c2调用的则是OOCourseAlpla类重写的displayInfo方法，但实际上c1和c2的引用类型都是Course。 上面我们提到的这个特性，就叫做**多态**。
+
+
+
+### 异常处理
+
+* 程序运行时，发生了不被期望的事件，它阻止了程序按照程序员的预期正常执行，这就是异常。
+* C：`return -1;` 
+  * 通过特殊返回值的异常处理方式，是一种隐含的方式，很容易被人忽略，导致在调用一个函数时忽略掉特殊返回值的情形，从而导致出错。
+* Java 提供了更加优秀的解决办法：**异常处理机制**
+
+
+
+异常处理机制采取显式的方式来处理异常，包括两个方面：
+
+* **引入了专门的表达和处理方式**，代码上一目了然就能看出是异常处理；
+* 一旦发生异常，会强迫程序执行进入异常处理分支，不会让异常“暗度陈仓”
+
+在 Java 语言中，每个异常都被封装为 `Exception`，当然程序员可以对 `Exception` 进行扩展（通过继承）来定义特定的异常。异常有抛出和捕捉两种处理方式：
+
+* 抛出：使用 Java 提供的 `throw` 关键词来产生一个 `Exception` 或者其某个子类的对象
+* 捕捉：通过 `catch`关键词来捕捉在一段代码的执行过程中所抛出的相关异常对象。
+
+
+
+### 其他细节补充
+
+`Bottle` 类的 `use()` 方法
+
+```java
+    @Override
+    public void use(Adventurer user) throws Exception {
+        if (!isFilled()) {
+            throw new Exception("Failed to use " + getName() + " because it is empty.");
+        }
+        user.setHealth(user.getHealth() + capacity / 10);
+        setFilled(false);
+        setPrice((long) (getPrice() / 10.0));
+
+        System.out.println(user.getName() +
+                " drank " + getName() +
+                " and recovered " + capacity / 10 +
+                ".");
+    }
+```
+
+*  `Bottle` 的 `getName()` 在类中使用时不必采用 `this,getName()`；
+
+  * ```java
+    @Override
+        public String toString() {
+            return "The bottle's id is " + getId() +
+                    ", name is " + getName() +
+                    ", capacity is " + getCapacity() +
+                    ", filled is " + isFilled() + ".";
+        }
+    ```
+
+* `@Override` ：方法重写
+
+
+
+#### 自定义排序
+
+* 给对象编写 `compareTo` 方法并实现 `Comparable` 接口，之后即可利用 `Collections.sort` 方法来给容器内对象进行排序
+  * 本 task 中：`compareTo` 方法仅需要在 Equipment 类中定义，Equipment 类的子类**如果不重写该方法的话，将会与父类行为保持一致**。
+
+> 与 `Collections.sort` 会调用 `compareTo` 方法实现自定义排序，类似地，`TreeSet` 和 `TreeMap` 容器也会通过调用对象的 `compareTo` 方法，从而维护一个key对象有序的集合/映射。
+>
+> 另外，`HashSet` 和 `HashMap` 这两种容器会通过调用对象的 `hashCode` 方法和 `equals` 方法来将任意对象作为key来使用。**这个知识点非常重要，请同学们务必弄懂其原理**。
+>
+> Java中许多内置的类，比如 `Integer` 和 `BigInteger` 等等都已经实现了`compareTo`、`hashCode`、`equals` 方法，所以你才可以直接把他们当作 `TreeMap` 和 `HashMap` 的key来使用。
+
+```java
+public class Equipment implements Comparable<Equipment> {
+    private int id;
+    private String name;
+    private long price;
+
+    public void use(Adventurer user) throws Exception{
+    }
+
+    @Override
+    public int compareTo(Equipment o) {
+        if (this.price < o.price) {
+            return -1;
+        } else if (this.price > o.price) {
+            return 1;
+        }
+
+        if (this.id < o.id) {
+            return -1;
+        } else if (this.id > o.id) {
+            return 1;
+        }
+
+        return 0;
+    }
+	// ...
+}    
+```
+
+```java
+public void useAll() {
+        ArrayList<Equipment> sorted = new ArrayList<>(equipments.values());
+        Collections.sort(sorted, Comparator.reverseOrder());
+        for (Equipment equipment : sorted) {
+            try {
+                equipment.use(this);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+```
+
+
+
+## task 5
+
+### 接口
+
+重写：子类的方法可以在父类的方法的基础上增加功能，或者实现一套和父类不同的新的功能。
+
+* 倘若父类的**抽象程度**很高，以至于在父类中没有办法去编写一个实现具体功能的方法，我们可能会想是不是可以不写方法的具体实现语句，只定义方法签名呢？
+
+eg. 计算二维图形面积
+
+1. 我们可以提供圆和正方形的面积求解方法：
+
+```java
+class Square {
+    private double length;
+    public double getArea() { //你可以为一个正方形编写求面积方法
+        return length * length;
+    }
+}
+
+class Circle {
+    private double radius;
+    public double getArea() { //你可以为一个圆形编写求面积方法
+        return radius * radius * Math.PI;
+    }
+}
+```
+
+2. 我们无法为抽象的二维图形Shape类实现面积求解方法
+   * 此时，我们可以使用**接口 **(Interface) 来表示这个抽象的类，然后声明上述两个具体的类实现 (implements) 了这个接口：
+
+```java
+interface Shape {
+    public double getArea(); // 你不能为抽象的`形状`概念定义求面积方法
+}
+
+class Square implements Shape {
+    private double length;
+    public Square(double length) {
+        this.length = length;
+    }
+    @Override
+    public double getArea() { //你可以为一个正方形编写求面积方法
+        return length * length;
+    }
+}
+
+class Circle implements Shape {
+    private double radius;
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    @Override
+    public double getArea() { //你可以为一个圆形编写求面积方法
+        return radius * radius * Math.PI;
+    }
+}
+```
+
+接口类型可以**引用**该接口**任一类型的实例化对象**，并调用相应方法；但不能用其**实例化**一个对象
+
+```java
+class Main {
+    public static void main(String[] args) {
+        Shape myShape; // 声明一个Shape的变量， 这是还没有任何实例产生
+        myShape = new Square(888); // 创建一个Square的实例，用myShape变量引用它。
+        System.out.println(myShape.getArea());
+        myShape = new Circle(888); // 创建一个Circle的实例，用myShape变量引用它。
+        System.out.println(myShape.getArea());
+        myShape = new Shape(); // Shape的概念过于抽象以至于实例化没有意义，这一行编译报错。
+    }
+}
+```
+
+在编程时，尽量使用高层次的引用（比如抽象类的引用和接口的引用），避免使用实际子类型的引用的方式，叫做面向抽象编程。
+
