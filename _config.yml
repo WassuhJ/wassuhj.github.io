@@ -67,7 +67,7 @@ netease_comment: false
 
 
 # Analytics settings
-Baidu Analytics 
+# Baidu Analytics 
 ba_track_id: <script>
 var _hmt = _hmt || [];
 (function() {
