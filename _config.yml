@@ -68,15 +68,8 @@ netease_comment: false
 
 # Analytics settings
 # Baidu Analytics 
-ba_track_id: <script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?5a7f209c342cb612763daa3150099e3f";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+# ba_track_id: 
+
 
 
 # Google Analytics
